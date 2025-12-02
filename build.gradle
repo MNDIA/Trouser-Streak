@@ -1,14 +1,18 @@
 plugins {
-    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'fabric-loom' version "${loom_version}"
 }
 
-//sourceCompatibility = JavaVersion.VERSION_21
-//targetCompatibility = JavaVersion.VERSION_21
 
-//archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+base {
+    archivesName = project.archives_base_name
+}
+
+java {
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_25
+}
 repositories {
     mavenCentral()
     maven { url "https://maven.meteordev.org/releases"}
@@ -30,13 +34,12 @@ dependencies {
 }
 
 processResources {
-    inputs.properties([
-            "version": project.version,
-            "mc_version": project.minecraft_version
-    ])
-
+    def propertyMap = [
+        "version"   : project.version,
+        "mc_version": project.minecraft_version,
+    ]
     filesMatching("fabric.mod.json") {
-        expand "version": project.version, "mc_version": project.minecraft_version
+        expand(propertyMap)
     }
 }
 
